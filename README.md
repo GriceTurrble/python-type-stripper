@@ -11,7 +11,7 @@ _TBD_
 
 _TBD_
 
-## What?
+## What it does
 
 - Parameter annotations in function definitions are removed:
 
