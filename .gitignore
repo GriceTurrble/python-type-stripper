@@ -11,3 +11,11 @@ wheels/
 .python-version
 .DS_Store
 .coverage*
+
+# Tool caches
+.ruff_cache
+.mypy_cache
+.pytest_cache
+
+# Pytest cov reports
+htmlcov
