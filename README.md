@@ -11,7 +11,7 @@ _TBD_
 
 _TBD_
 
-## What?
+## What it does
 
 - Parameter annotations in function definitions are removed:
 
@@ -65,11 +65,14 @@ This package uses [`libcst`](https://github.com/Instagram/LibCST)
 to parse the Concrete Syntax Tree of an input module,
 then modifies (or removes) nodes in that tree to strip type annotations away.
 
+A similar task could be completed in Python's [`ast`](https://docs.python.org/3/library/ast.html) module,
+however the AST does not preserve code structure or syntax the way CST does.
+
 ## Why?
 
 For fun ~~and profit~~. 🙂
 
-Some potential use cases include:
+There are some potential use cases, however:
 
 - **Backwards compatibility**:
   Code developed on modern Python versions with type hinting
