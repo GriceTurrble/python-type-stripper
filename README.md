@@ -1,4 +1,4 @@
-# type-stripper
+# python-type-stripper
 
 Python package that strips type annotations from a source file,
 printing the modified file to stdout.
