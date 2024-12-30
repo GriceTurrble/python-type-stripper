@@ -27,14 +27,25 @@ test *args:
 
 # Run tests in sequence for all python versions available. Note, coverage reporting is disabled
 test-all-versions *args:
-    @echo ">>\n>> Testing on 3.9...\n>>"
+    @echo "{{ BG_GREEN }}>> Testing on 3.9...{{ NORMAL }}"
     @just _test 3.9 {{args}} --no-cov
-    @echo ">>\n>> Testing on 3.10...\n>>"
+    @echo "{{ BG_GREEN }}>> Testing on 3.10...{{ NORMAL }}"
     @just _test 3.10 {{args}} --no-cov
-    @echo ">>\n>> Testing on 3.11...\n>>"
+    @echo "{{ BG_GREEN }}>> Testing on 3.11...{{ NORMAL }}"
     @just _test 3.11 {{args}} --no-cov
-    @echo ">>\n>> Testing on 3.12...\n>>"
+    @echo "{{ BG_GREEN }}>> Testing on 3.12...{{ NORMAL }}"
     @just _test 3.12 {{args}} --no-cov
-    @echo ">>\n>> Testing on 3.13...\n>>"
+    @echo "{{ BG_GREEN }}>> Testing on 3.13...{{ NORMAL }}"
     @just _test 3.13 {{args}} --no-cov
-    @echo ">> SUCCESS: All tests passing. :)"
+    @echo "{{ BG_GREEN }}>> SUCCESS: All tests passing. :){{ NORMAL }}"
+
+# The result should be `\\[ \\]`, but we need to escape those slashes again here to make it work:
+GREP_TARGET := "\\\\[gone\\\\]"
+
+# Switches to `main` branch, then prunes local branches deleted from remote.
+[group("git")]
+prune_dead_branches:
+    @echo "{{ BG_GREEN }}>> 'Removing dead branches...{{ NORMAL }}"
+    @git switch main
+    @git fetch --prune
+    @git branch -v | grep "{{ GREP_TARGET }}" | awk '{print $1}' | xargs -I{} git branch -D {}
