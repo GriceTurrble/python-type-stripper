@@ -18,4 +18,4 @@ wheels/
 .pytest_cache
 
 # Pytest cov reports
-htmlcov
+pytest_cov
