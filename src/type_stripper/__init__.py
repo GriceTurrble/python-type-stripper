@@ -1,14 +1,16 @@
 """type-stripper module."""
 
 from pathlib import Path
-import libcst as cst
+from typing import Union
+
 import click
+import libcst as cst
 
 
 class TypeStripperTransformer(cst.CSTTransformer):
     """CST transformer to strip type annotations from the tree."""
 
-    def leave_FunctionDef(
+    def leave_FunctionDef(  # noqa: N802 (invalid-function-name)
         self,
         original_node: cst.FunctionDef,
         updated_node: cst.FunctionDef,
@@ -18,7 +20,7 @@ class TypeStripperTransformer(cst.CSTTransformer):
             returns=None,
         )
 
-    def leave_Param(
+    def leave_Param(  # noqa: N802 (invalid-function-name)
         self,
         original_node: cst.Param,
         updated_node: cst.Param,
@@ -28,11 +30,11 @@ class TypeStripperTransformer(cst.CSTTransformer):
             annotation=None,
         )
 
-    def leave_AnnAssign(
+    def leave_AnnAssign(  # noqa: N802 (invalid-function-name)
         self,
         original_node: cst.AnnAssign,
         updated_node: cst.AnnAssign,
-    ) -> cst.Assign | cst.RemovalSentinel:
+    ) -> Union[cst.Assign, cst.RemovalSentinel]:
         """Transform an annotated assignment to a simple assignment if possible.
 
         Bare annotations like `x: int` are removed from the tree entirely.
