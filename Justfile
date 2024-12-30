@@ -21,31 +21,35 @@ lint hook_id="":
 
 # Run tests on Python 'version' with pytest 'args'
 [group("testing")]
-_test version *args:
+test-on version *args:
     uv run --python {{version}} pytest {{args}}
 
-# Run tests with pytest 'args'
+
+# Run tests with pytest 'args' on latest Python
 [group("testing")]
 test *args:
-    @just _test 3.13 {{args}}
+    @just test-on 3.13 {{args}}
 
-# Run tests in sequence for all python versions available. Note, coverage reporting is disabled
+
+# Run tests in sequence for all Python versions available. Note, coverage reporting is disabled
 [group("testing")]
-test-all-versions *args:
+test-all *args:
     @echo "{{ BG_GREEN }}>> Testing on 3.9...{{ NORMAL }}"
-    @just _test 3.9 {{args}} --no-cov
+    @just test-on 3.9 {{args}} --no-cov
     @echo "{{ BG_GREEN }}>> Testing on 3.10...{{ NORMAL }}"
-    @just _test 3.10 {{args}} --no-cov
+    @just test-on 3.10 {{args}} --no-cov
     @echo "{{ BG_GREEN }}>> Testing on 3.11...{{ NORMAL }}"
-    @just _test 3.11 {{args}} --no-cov
+    @just test-on 3.11 {{args}} --no-cov
     @echo "{{ BG_GREEN }}>> Testing on 3.12...{{ NORMAL }}"
-    @just _test 3.12 {{args}} --no-cov
+    @just test-on 3.12 {{args}} --no-cov
     @echo "{{ BG_GREEN }}>> Testing on 3.13...{{ NORMAL }}"
-    @just _test 3.13 {{args}} --no-cov
+    @just test-on 3.13 {{args}} --no-cov
     @echo "{{ BG_GREEN }}>> SUCCESS: All tests passing. :){{ NORMAL }}"
+
 
 # The result should be `\\[ \\]`, but we need to escape those slashes again here to make it work:
 GREP_TARGET := "\\\\[gone\\\\]"
+
 
 # Switches to `main` branch, then prunes local branches deleted from remote.
 [group("git")]

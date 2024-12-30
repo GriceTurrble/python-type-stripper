@@ -159,3 +159,6 @@ Any additional args are passed to `pytest` unchanged:
 just test -k test_selector
 # uv run pytest -k test_selector
 ```
+
+This will run tests on the latest Python version supported by the library.
+You can test against all supported versions using `just test-all`
