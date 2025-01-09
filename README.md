@@ -5,11 +5,29 @@ printing the modified file to stdout.
 
 ## Installation
 
-_TBD_
+Install from [PyPI](https://pypi.org/project/type-stripper/):
+
+```sh
+pip install type-stripper
+```
 
 ## Usage
 
-_TBD_
+Runs as a CLI tool. Give it a file path:
+
+```sh
+type-stripper /path/to/file.py
+```
+
+...and the results of the changes will be sent to stdout.
+
+This output can be piped back to a file:
+
+```sh
+type-stripper /path/to/file.py > newfile.py
+```
+
+Use `type-stripper --help` for details.
 
 ## What it does
 
