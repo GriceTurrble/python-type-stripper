@@ -1,16 +1,41 @@
 [project]
 name = "type-stripper"
-version = "0.1.4"
+version = "0.1.5"
 description = "A CLI tool that removes type annotations from Python source files."
 readme = "README.md"
 authors = [
-    { name = "Galen Rice", email = "griceturrble@protonmail.com" }
+    { name = "Galen Rice", email = "griceturrble@protonmail.com" },
 ]
 requires-python = ">=3.9"
+keywords = ["typing", "transpiler"]
+classifiers = [
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Topic :: Software Development :: Build Tools",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 dependencies = [
     "click>=8.1.8",
     "libcst>=1.5.1",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+]
+
+[project.urls]
+homepage = "https://github.com/griceturrble/python-type-stripper"
 
 [project.scripts]
 type-stripper = "type_stripper:main"
@@ -18,12 +43,6 @@ type-stripper = "type_stripper:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[dependency-groups]
-dev = [
-    "pytest>=8.3.4",
-    "pytest-cov>=6.0.0",
-]
 
 [tool.pytest.ini_options]
 addopts = """
