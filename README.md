@@ -5,10 +5,20 @@ printing the modified file to stdout.
 
 ## Installation
 
-Install from [PyPI](https://pypi.org/project/type-stripper/):
+Install `type-stripper` from [PyPI](https://pypi.org/project/type-stripper/):
 
 ```sh
 pip install type-stripper
+```
+
+You can also run `type-stripper` as a standalone tool using [pipx](https://pipx.pypa.io/):
+
+```sh
+# As an installed standalone tool:
+pipx install type-stripper
+
+# Or as a one-off:
+pipx run type-stripper /path/to/file.py
 ```
 
 ## Usage
