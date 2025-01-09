@@ -55,6 +55,8 @@ prune-dead-branches:
 
 alias prune := prune-dead-branches
 
+# Draft a new release on GitHub matching 'tag' (must match semver specs)
 [group("release")]
 draft-release tag:
+    @{{ semver_matches(tag, ">=0.0.1") }}
     gh release create v{{ tag }} -d --generate-notes
