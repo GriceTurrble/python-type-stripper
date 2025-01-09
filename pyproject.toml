@@ -1,6 +1,6 @@
 [project]
 name = "type-stripper"
-version = "0.1.2"
+version = "0.1.3"
 description = "A CLI tool that removes type annotations from Python source files."
 readme = "README.md"
 authors = [
