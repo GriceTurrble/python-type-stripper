@@ -54,3 +54,7 @@ prune-dead-branches:
     @git branch -v | grep "{{ GREP_TARGET }}" | awk '{print $1}' | xargs -I{} git branch -D {}
 
 alias prune := prune-dead-branches
+
+[group("release")]
+draft-release tag:
+    gh release create v{{ tag }} -d --generate-notes
