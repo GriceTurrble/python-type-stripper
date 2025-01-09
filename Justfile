@@ -55,8 +55,14 @@ prune-dead-branches:
 
 alias prune := prune-dead-branches
 
-# Draft a new release on GitHub matching 'tag' (must match semver specs)
+LATEST_TAG := `git tag --sort=committerdate | tail -1`
+PROJECT_VERSION := `python -c "import tomllib; from pathlib import Path; print(tomllib.loads(Path('pyproject.toml').read_text())['project']['version'])"`
+
+# Draft a new release on GitHub matching the version from pyproject.toml
 [group("release")]
-draft-release tag:
-    @{{ semver_matches(tag, ">=0.0.1") }}
-    gh release create v{{ tag }} -d --generate-notes
+draft-release:
+    gh release create \
+        v{{ PROJECT_VERSION }} \
+        --generate-notes \
+        --notes-start-tag {{ LATEST_TAG }} \
+        --draft
