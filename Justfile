@@ -113,3 +113,20 @@ _draft-release:
         --generate-notes \
         --notes-start-tag v$LATEST_RELEASE \
         --draft
+
+[group("releases")]
+@release-diff tag="":
+    git fetch --prune
+    if [ "{{ tag }}" == "" ]; then \
+        LATEST_TAG=`gh release list \
+            --exclude-drafts \
+            --exclude-pre-releases \
+            --limit 1 \
+            --json name \
+            --jq ".[0].name"`; \
+    else \
+        LATEST_TAG="v{{ tag }}"; \
+    fi; \
+    git log \
+        --pretty=format:"* %Cgreen%h%Creset %s" \
+        ${LATEST_TAG}..HEAD
