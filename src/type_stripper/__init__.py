@@ -6,6 +6,8 @@ from typing import Union
 import click
 import libcst as cst
 
+__version__ = "0.1.5"
+
 
 class TypeStripperTransformer(cst.CSTTransformer):
     """CST transformer to strip type annotations from the tree."""
@@ -58,6 +60,7 @@ def strip_annotations(code: str) -> str:
 
 
 @click.command()
+@click.version_option(__version__, message="%(prog)s %(version)s")
 @click.argument(
     "file",
     type=click.Path(
