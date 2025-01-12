@@ -5,12 +5,16 @@
 @help:
     just --list --unsorted --justfile {{ source_file() }}
 
+# Sync uv dependencies for all groups
+[group("devtools")]
+sync:
+    uv sync --all-groups
 
 # Setup dev environment
 [group("devtools")]
 bootstrap:
     pre-commit install
-    uv sync
+    just sync
 
 
 # Lint all project files using 'pre-commit run <hook_id>'. By default, runs all hooks.
