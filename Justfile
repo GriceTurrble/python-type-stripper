@@ -130,3 +130,5 @@ _draft-release:
     git log \
         --pretty=format:"* %Cgreen%h%Creset %s" \
         ${LATEST_TAG}..HEAD
+
+alias reldiff := release-diff
