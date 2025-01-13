@@ -1,26 +1,31 @@
 # Just tools to work on the project.
 # https://just.systems/
 
+### START COMMON ###
+import? 'common.just'
+
 # Show these help docs
-@help:
-    just --list --unsorted --justfile {{ source_file() }}
+help:
+    @just --list --unsorted --justfile {{ source_file() }}
+
+# Pull latest common justfile recipes to local repo
+[group("commons")]
+sync-justfile:
+    curl -H 'Cache-Control: no-cache, no-store' \
+        https://raw.githubusercontent.com/griceturrble/common-project-files/main/Justfile > common.just
+### END COMMON ###
 
 # Sync uv dependencies for all groups
 [group("devtools")]
-sync:
+sync-uv:
     uv sync --all-groups
 
 # Setup dev environment
 [group("devtools")]
 bootstrap:
-    pre-commit install
-    just sync
-
-
-# Lint all project files using 'pre-commit run <hook_id>'. By default, runs all hooks.
-[group("devtools")]
-lint hook_id="":
-    pre-commit run {{hook_id}} --all-files
+    just sync-justfile
+    just bootstrap-commons
+    just sync-uv
 
 
 # Run tests on Python 'version' with pytest 'args'
@@ -47,39 +52,6 @@ test-on version *args:
     echo "{{ GREEN }}>> SUCCESS: All tests passing. :){{ NORMAL }}"
 
 
-# The result should be `\\[ \\]`, but we need to escape those slashes again here to make it work:
-GONE_GREP_TARGET := "\\\\[gone\\\\]"
-
-# Prunes local branches deleted from remote.
-[group("git")]
-prune-dead-branches:
-    @echo "{{ GREEN }}>> Removing dead branches...{{ NORMAL }}"
-    git fetch --prune
-    git branch -v | grep "{{ GONE_GREP_TARGET }}" | awk '{print $1}' | xargs -I{} git branch -D {}
-
-
-# Remove all local tags and re-fetch tags from the remote. Tags removed from remote will now be gone.
-[group("git")]
-prune-tags:
-    @echo "{{ GREEN }}>> Cleaning up tags not present on remote...{{ NORMAL }}"
-    git tag -l | xargs git tag -d
-    git fetch --tags
-
-# Run all git "prune-" commands above
-[group("git")]
-prune: prune-dead-branches prune-tags
-
-# # Grabs the latest release name out of GitHub releases.
-# # Note the leading 'v' character will be removed.
-# LATEST_RELEASE := ```
-#     gh release list \
-#         --exclude-drafts \
-#         --exclude-pre-releases \
-#         --limit 1 \
-#         --json name \
-#         --jq ".[0].name" \
-#     | sed s/^v//
-# ```
 # Extract project version from the init file.
 PROJECT_VERSION := `cat src/type_stripper/__init__.py  | grep "^__version__" | sed -rn 's|^[^=]*= "(.*)"|\1|p'`
 
@@ -105,30 +77,10 @@ _draft-release:
         --exclude-drafts \
         --exclude-pre-releases \
         --limit 1 \
-        --json name \
-        --jq ".[0].name" \
-        | sed s/^v//` \
+        --json tagName \
+        --jq ".[0].tagName" \
     && gh release create \
         v{{ PROJECT_VERSION }} \
         --generate-notes \
-        --notes-start-tag v$LATEST_RELEASE \
+        --notes-start-tag $LATEST_RELEASE \
         --draft
-
-[group("releases")]
-@release-diff tag="":
-    git fetch --prune
-    if [ "{{ tag }}" == "" ]; then \
-        LATEST_TAG=`gh release list \
-            --exclude-drafts \
-            --exclude-pre-releases \
-            --limit 1 \
-            --json name \
-            --jq ".[0].name"`; \
-    else \
-        LATEST_TAG="v{{ tag }}"; \
-    fi; \
-    git log \
-        --pretty=format:"* %Cgreen%h%Creset %s" \
-        ${LATEST_TAG}..HEAD
-
-alias reldiff := release-diff

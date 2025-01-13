@@ -19,3 +19,6 @@ wheels/
 
 # Pytest cov reports
 pytest_cov
+
+# Local stuff
+common.just
