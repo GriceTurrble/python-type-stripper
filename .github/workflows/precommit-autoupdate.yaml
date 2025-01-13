@@ -47,6 +47,8 @@ jobs:
           title: "pre-commit autoupdate"
           # Use the body of our temp file for the body of the PR
           body-path: tmp_create_pr_body.md
+          # Force draft for a start.
+          draft: true
           # Only interested in updates to pre-commit config
           add-paths: |
             .pre-commit-config.yaml
@@ -56,3 +58,10 @@ jobs:
         run: |
           echo "Pull Request Number - ${{ steps.create-pr.outputs.pull-request-number }}"
           echo "Pull Request URL - ${{ steps.create-pr.outputs.pull-request-url }}"
+
+      - name: "Undraft the PR"
+        if: ${{ steps.create-pr.outputs.pull-request-number }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          gh pr ready ${{ steps.create-pr.outputs.pull-request-number }}
