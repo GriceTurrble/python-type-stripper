@@ -4,9 +4,10 @@ name: pre-commit autoupdate
 permissions: write-all
 on:
   workflow_dispatch:
-  # schedule:
-  #   # Every Monday 11AM UTC (~6AM US/Eastern)
-  #   - cron: "0 11 * * 1"
+  schedule:
+    # Every Monday 11AM UTC (~6AM US/Eastern)
+    - cron: "0 11 * * 1"
+    - cron: "5 15 * * 1" # test
 
 env:
   PYTHON_VERSION: "3.12"
