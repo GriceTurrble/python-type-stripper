@@ -33,7 +33,10 @@ jobs:
         name: "Run pre-commit autoupdate"
         run: |
           UPDATE_OUTPUT=$(pre-commit autoupdate)
-          echo "$UPDATE_OUTPUT" | sed -rn 's|^(.*updating.*)$|* \1|p' > tmp_create_pr_body.md
+          echo "$UPDATE_OUTPUT" \
+            | sed -rn 's|^(.*updating.*)$|* \1|p' \
+            | sed -rn 's|^\* \[(https://github.com/(.*))\] (.*)|* [\2](\1) - \3|p' \
+            > tmp_create_pr_body.md
         shell: bash
 
       - name: "Create PR for updates"
