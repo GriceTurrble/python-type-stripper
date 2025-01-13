@@ -1,62 +1,21 @@
 # Composite workflow to run pre-commit autoupdate, then create a pull request
 
 name: pre-commit autoupdate
-permissions: write-all
+
 on:
   workflow_dispatch:
   schedule:
     # Every Monday 11AM UTC (~6AM US/Eastern)
     - cron: "0 11 * * 1"
 
-env:
-  PYTHON_VERSION: "3.12"
-  PRE_COMMIT_VERSION: "4.0.1"
-  PR_BRANCH: "ci/pre-commit-autoupdate"
-
 jobs:
   update:
+    permissions:
+      contents: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
-      - name: "Checkout code"
-        uses: actions/checkout@v4
-
-      - name: "Setup Python"
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: griceturrble/precommit-autoupdate-action@v0
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: "Install pre-commit"
-        run: python -m pip install pre-commit==${{ env.PRE_COMMIT_VERSION }}
-        shell: bash
-
-      - id: autoupdate-run
-        name: "Run pre-commit autoupdate"
-        run: |
-          UPDATE_OUTPUT=$(pre-commit autoupdate)
-          echo "$UPDATE_OUTPUT" \
-            | sed -rn 's|^(.*updating.*)$|* \1|p' \
-            | sed -rn 's|^\* \[(https://github.com/(.*))\] (.*)|* [\2](\1) - \3|p' \
-            > tmp_create_pr_body.md
-        shell: bash
-
-      - name: "Create PR for updates"
-        id: create-pr
-        uses: peter-evans/create-pull-request@v7
-        with:
-          branch: ${{ env.PR_BRANCH }}
-          title: "pre-commit autoupdate"
-          # Use the body of our temp file for the body of the PR
-          body-path: tmp_create_pr_body.md
-          # start in draft, so that I can manually un-draft it,
-          # in order to trigger CI runs
-          # See: https://github.com/peter-evans/create-pull-request/issues/48
-          draft: true
-          # Only interested in updates to pre-commit config
-          add-paths: |
-            .pre-commit-config.yaml
-
-      - name: "PR created"
-        if: ${{ steps.create-pr.outputs.pull-request-number }}
-        run: |
-          echo "Pull Request Number - ${{ steps.create-pr.outputs.pull-request-number }}"
-          echo "Pull Request URL - ${{ steps.create-pr.outputs.pull-request-url }}"
+          create_as_draft: true
