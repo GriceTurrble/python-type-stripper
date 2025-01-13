@@ -1,4 +1,4 @@
-# Composite workflow to run pre-commit autoupdate, then create a pull request
+# Run pre-commit autoupdate and create a pull request with any updates
 
 name: pre-commit autoupdate
 
