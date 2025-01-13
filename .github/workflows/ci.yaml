@@ -4,6 +4,13 @@ on:
     branches:
       - main
   pull_request:
+    types:
+      # Defaults (must rewrite)
+      - opened
+      - synchronize
+      - reopened
+      # Extra:
+      - ready_for_review
 
 env:
   PRE_COMMIT_VERSION: "4.0.1"
