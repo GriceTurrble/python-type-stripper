@@ -1,6 +1,6 @@
 # Composite workflow to run pre-commit autoupdate, then create a pull request
 
-name: Pre-commit Autoupdate
+name: pre-commit autoupdate
 permissions: write-all
 on:
   workflow_dispatch:
@@ -33,14 +33,23 @@ jobs:
         name: "Run pre-commit autoupdate"
         run: |
           UPDATE_OUTPUT=$(pre-commit autoupdate)
-          echo "$UPDATE_OUTPUT" | sed -rn 's|^(.*updating.*)$|* \1|p' > tempfilewat
-          echo "OUTPUT_STRIPPED=$(cat tempfilewat)" >> "$GITHUB_OUTPUT"
-          rm tempfilewat
+          echo "$UPDATE_OUTPUT" | sed -rn 's|^(.*updating.*)$|* \1|p' > tmp_create_pr_body.md
         shell: bash
 
       - name: "Create PR for updates"
+        id: create-pr
         uses: peter-evans/create-pull-request@v7
         with:
           branch: ${{ env.PR_BRANCH }}
-          title: "Pre-commit autoupdate"
-          body: ${{ steps.autoupdate-run.outputs.OUTPUT_STRIPPED }}
+          title: "pre-commit autoupdate"
+          # Use the body of our temp file for the body of the PR
+          body-path: tmp_create_pr_body.md
+          # Only interested in updates to pre-commit config
+          add-paths: |
+            .pre-commit-config.yaml
+
+      - name: "PR created"
+        if: ${{ steps.create-pr.outputs.pull-request-number }}
+        run: |
+          echo "Pull Request Number - ${{ steps.create-pr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.create-pr.outputs.pull-request-url }}"
