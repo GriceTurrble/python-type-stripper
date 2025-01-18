@@ -12,10 +12,6 @@ on:
       # Extra:
       - ready_for_review
 
-env:
-  PRE_COMMIT_VERSION: "4.0.1"
-  PRE_COMMIT_PYTHON_VERSION: "3.12"
-
 jobs:
   precommit:
     name: Precommit checks
