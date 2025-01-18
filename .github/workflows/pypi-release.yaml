@@ -3,12 +3,15 @@ on:
   release:
     types: [published]
 
+env:
+  PROJECT_NAME: "type-stripper"
+
 jobs:
   release:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/type-stripper
+      url: https://pypi.org/p/${{ env.PROJECT_NAME }}
     permissions:
       contents: write
       id-token: write
