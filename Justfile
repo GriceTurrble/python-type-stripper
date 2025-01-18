@@ -10,9 +10,10 @@ help:
 
 # Pull latest common justfile recipes to local repo
 [group("commons")]
-sync-justfile:
+sync-commons:
+    rm common.just
     curl -H 'Cache-Control: no-cache, no-store' \
-        https://raw.githubusercontent.com/griceturrble/common-project-files/main/Justfile > common.just
+        https://raw.githubusercontent.com/griceturrble/common-project-files/main/common.just?cachebust={{ uuid() }} > common.just
 ### END COMMON ###
 
 # Sync uv dependencies for all groups
@@ -23,7 +24,7 @@ sync-uv:
 # Setup dev environment
 [group("devtools")]
 bootstrap:
-    just sync-justfile
+    just sync-commons
     just bootstrap-commons
     just sync-uv
 
