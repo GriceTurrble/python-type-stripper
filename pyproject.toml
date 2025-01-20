@@ -1,5 +1,7 @@
 [project]
 name = "type-stripper"
+# TODO: Feb 15 2024, see if this can be re-enabled safely
+# dynamic = ["version"]
 version = "0.1.5"
 description = "A CLI tool that removes type annotations from Python source files."
 readme = "README.md"
@@ -43,6 +45,10 @@ type-stripper = "type_stripper:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+# TODO: Feb 15 2024, see if this can be re-enabled safely
+# [tool.hatch.version]
+# path = "src/type_stripper/__init__.py"
 
 [tool.pytest.ini_options]
 addopts = """
